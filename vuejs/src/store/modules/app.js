@@ -7,11 +7,11 @@ const initialState = () => ({
   },
 });
 
-const state = initialState ();
+const state = initialState();
 
 // Getters
 const getters = {
-  appLayout: state => state.app.layout,
+  appLayout: (state) => state.app.layout,
   isLoggedIn: (state, getters, rootState) => {
     return rootState.auth.key && rootState.auth.secret;
   },
@@ -19,27 +19,27 @@ const getters = {
 
 // Actions
 const actions = {
-  async setAppLayout (context, payload) {
-    await context.commit ('set_app_layout', payload);
-    console.log (context.getters['appLayout'], context.state.app.layout);
+  async setAppLayout(context, payload) {
+    await context.commit('set_app_layout', payload);
+    console.log(context.getters['appLayout'], context.state.app.layout);
   },
-  showLoader () {
-    EventBus.$emit ('showLoader');
+  showLoader() {
+    EventBus.$emit('showLoader');
   },
-  hideLoader () {
-    EventBus.$emit ('hideLoader');
+  hideLoader() {
+    EventBus.$emit('hideLoader');
   },
-  showMessage (payload) {
-    EventBus.$emit ('showMessage', payload);
+  showMessage(context, payload) {
+    EventBus.$emit('showMessage', payload);
   },
 };
 
 // Mutations
 const mutations = {
   set_app_layout: (state, payload) => {
-    console.log ('Old layout : ' + state.app.layout);
+    console.log('Old layout : ' + state.app.layout);
     state.app.layout = payload.layout;
-    console.log ('New layout : ' + payload.layout);
+    console.log('New layout : ' + payload.layout);
   },
 };
 

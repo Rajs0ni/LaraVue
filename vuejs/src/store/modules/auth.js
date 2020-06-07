@@ -14,6 +14,11 @@ const actions = {
     context.commit('set_key', response);
     return response;
   },
+  async register(context, payload) {
+    let response = await API.auth.register(payload);
+    context.commit('set_key', response);
+    return response;
+  },
   async verify(context, payload) {
     let response = await API.auth.verify(payload);
     return response;

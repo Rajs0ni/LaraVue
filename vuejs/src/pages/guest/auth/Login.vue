@@ -39,7 +39,8 @@
           large
           block
           @click="login"
-        >Login</v-btn>
+          >Login</v-btn
+        >
         <v-btn
           v-if="otp.button.active"
           :loading="otp.button.loading"
@@ -49,49 +50,58 @@
           large
           block
           @click="verifyOtp"
-        >Verify</v-btn>
+          >Verify</v-btn
+        >
+
+        <span>Not signed in yet?</span>
+        <a
+          class="px-1 customPrimary--text"
+          @click="$router.push({name: 'guest.register'})"
+        >
+          <u>Sign In</u>
+        </a>
       </v-form>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import rules from "@/validation";
-import { mapState } from "vuex";
-import DEFINES from "@/defines";
+import rules from '@/validation';
+import {mapState} from 'vuex';
+
 export default {
-  name: "Login",
+  name: 'Login',
   data: () => ({
     rules,
     email: {
       field: {
         active: true,
-        value: ""
+        value: '',
       },
       button: {
         active: true,
-        loading: false
-      }
+        loading: false,
+      },
     },
     otp: {
       field: {
         active: false,
-        value: ""
+        value: '',
       },
       button: {
-        loading: false
-      }
-    }
+        loading: false,
+      },
+    },
   }),
   computed: {
     ...mapState({
-      session_key: state => state.auth.key
-    })
+      session_key: (state) => state.auth.key,
+    }),
   },
   methods: {
     _activeOtp() {
       this.otp.field.active = true;
-      this.otp.field.value = "";
+      this.otp.field.value = '';
       this.otp.button.active = true;
       this.email.button.active = false;
     },
@@ -109,17 +119,16 @@ export default {
       }
       this.email.button.loading = true;
       try {
-        await this.$store.dispatch("auth/login", {
-          email: this.email.field.value
+        await this.$store.dispatch('auth/login', {
+          email: this.email.field.value,
         });
         this._activeOtp();
       } catch (error) {
-        this.$store.dispatch("app/showMessage", {
+        this.$store.dispatch('app/showMessage', {
           message: error.message,
-          color: DEFINES.ERROR_COLOR
+          color: this.DEFINES.ERROR_COLOR,
         });
         this._activeEmail();
-        console.error(error);
       }
     },
     async verifyOtp() {
@@ -128,21 +137,20 @@ export default {
       }
       this.otp.button.loading = true;
       try {
-        await this.$store.dispatch("auth/verify", {
+        await this.$store.dispatch('auth/verify', {
           otp: this.otp.value,
-          key: this.session_key
+          key: this.session_key,
         });
         this.otp.button.loading = false;
       } catch (error) {
-        this.$store.dispatch("app/showMessage", {
+        this.$store.dispatch('app/showMessage', {
           message: error.message,
-          color: DEFINES.ERROR_COLOR
+          color: this.DEFINES.ERROR_COLOR,
         });
         this._activeEmail();
-        console.error(error);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

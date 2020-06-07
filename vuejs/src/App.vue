@@ -8,44 +8,62 @@
     </template>
     <!-- Global loader -->
     <Loader :loader="loader"></Loader>
+    <v-snackbar v-if="true" class="success" v-model="snackbar.show" bottom>
+      {{ snackbar.text }}
+      <v-btn icon color="white">
+        <v-icon small class="black--text" @click="snackbar.show = false"
+          >close</v-icon
+        >
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
-import AuthLayout from "@/layouts/AuthLayout";
-import AppLayout from "@/layouts/AppLayout";
-import Loader from "@/components/Loader";
-import { mapGetters } from "vuex";
-import DEFINES from "@/defines";
-import { EventBus } from "@/event-bus";
+import AuthLayout from '@/layouts/AuthLayout';
+import AppLayout from '@/layouts/AppLayout';
+import Loader from '@/components/Loader';
+import {mapGetters} from 'vuex';
+import {EventBus} from '@/event-bus';
 
 export default {
-  name: "App",
-  data: () => ({
-    loader: false,
-    appLayout: DEFINES.LAYOUT_APP,
-    authLayout: DEFINES.LAYOUT_AUTH
-  }),
+  name: 'App',
+  data() {
+    return {
+      snackbar: {
+        show: false,
+        color: '',
+        text: '',
+      },
+      loader: false,
+      appLayout: this.DEFINES.LAYOUT_APP,
+      authLayout: this.DEFINES.LAYOUT_AUTH,
+    };
+  },
   computed: {
-    ...mapGetters("app", {
-      layout: "appLayout"
-    })
+    ...mapGetters('app', {
+      layout: 'appLayout',
+    }),
   },
   components: {
     AuthLayout,
     AppLayout,
-    Loader
+    Loader,
   },
   created() {
-    EventBus.$on("showLoader", () => {
+    EventBus.$on('showLoader', () => {
       this.loader = true;
     });
-    EventBus.$on("hideLoader", () => {
+    EventBus.$on('hideLoader', () => {
       this.loader = false;
     });
-    EventBus.$on("showMessage", payload => {
-      console.log(payload);
+    EventBus.$on('showMessage', (payload) => {
+      this.snackbar = {
+        show: true,
+        color: payload.color,
+        text: payload.message,
+      };
     });
-  }
+  },
 };
 </script>
