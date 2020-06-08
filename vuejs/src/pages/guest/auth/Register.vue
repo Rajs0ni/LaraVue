@@ -1,6 +1,6 @@
 <template>
   <v-card flat class="pa-3">
-    <v-card-title primary-title class="mb-2">Sign In</v-card-title>
+    <v-card-title primary-title class="mb-2 customPrimary--text">Register</v-card-title>
     <v-card-text>
       <v-form ref="form" onsubmit="return false;" class="text-center">
         <!-- Name -->
@@ -49,8 +49,7 @@
           large
           block
           @click="onRegister"
-          >Sign In</v-btn
-        >
+        >Register</v-btn>
         <v-btn
           v-if="otp.button.active"
           :loading="otp.button.loading"
@@ -60,14 +59,10 @@
           large
           block
           @click="verifyOtp"
-          >Verify</v-btn
-        >
+        >Verify</v-btn>
 
-        <span>Already signed in?</span>
-        <a
-          class="px-1 customPrimary--text"
-          @click="$router.push({name: 'guest.login'})"
-        >
+        <span>Already registered?</span>
+        <a class="px-1 customPrimary--text" @click="$router.push({name: 'guest.login'})">
           <u>Log In</u>
         </a>
       </v-form>
@@ -76,47 +71,50 @@
 </template>
 
 <script>
-import rules from '@/validation';
-import {mapState} from 'vuex';
+import rules from "@/validation";
+import { mapState } from "vuex";
 
 export default {
-  name: 'Register',
+  name: "Register",
   data: () => ({
     rules,
     register: {
       button: {
         active: true,
-        loading: false,
+        loading: false
       },
       data: {
         name: null,
-        email: null,
-      },
+        email: null
+      }
     },
     otp: {
       field: {
         active: false,
-        value: '',
+        value: ""
       },
       button: {
-        loading: false,
-      },
-    },
+        active: false,
+        loading: false
+      }
+    }
   }),
   computed: {
     ...mapState({
-      session_key: (state) => state.auth.key,
-    }),
+      session_key: state => state.auth.key
+    })
   },
   methods: {
     _activeOtpField() {
       this.otp.field.active = true;
+      this.otp.button.active = true;
+      this.otp.field.value = "";
       this.register.button.active = false;
       this.register.button.loading = false;
-      this.otp.field.value = '';
     },
     _activeRegisterField() {
       this.otp.field.active = false;
+      this.otp.button.active = false;
       this.otp.button.loading = false;
       this.register.button.active = true;
       this.register.button.loading = false;
@@ -127,17 +125,17 @@ export default {
       }
       this.register.button.loading = true;
       try {
-        await this.$store.dispatch('auth/register', this.register.data);
+        await this.$store.dispatch("auth/register", this.register.data);
         this._activeOtpField();
-        this.$store.dispatch('app/showMessage', {
-          message: 'An OTP has been sent to your email !!',
-          color: this.DEFINES.SUCCESS_COLOR,
+        this.$store.dispatch("app/showMessage", {
+          message: "An OTP has been sent to your email !!",
+          color: this.DEFINES.SUCCESS_COLOR
         });
       } catch (error) {
         this._activeRegisterField();
-        this.$store.dispatch('app/showMessage', {
+        this.$store.dispatch("app/showMessage", {
           message: error.message,
-          color: this.DEFINES.ERROR_COLOR,
+          color: this.DEFINES.ERROR_COLOR
         });
       }
     },
@@ -147,25 +145,25 @@ export default {
       }
       this.otp.button.loading = true;
       try {
-        let data = await this.$store.dispatch('auth/verifyOtp', {
+        let data = await this.$store.dispatch("auth/verify", {
           otp: this.otp.field.value,
-          key: this.session_key,
+          key: this.session_key
         });
         this.otp.button.loading = false;
-        this.$store.dispatch('app/showMessage', {
+        this.$store.dispatch("app/showMessage", {
           message: "You're verified !!",
-          color: this.DEFINES.SUCCESS_COLOR,
+          color: this.DEFINES.SUCCESS_COLOR
         });
-        await this.$store.dispatch('auth/loginSuccess', data);
+        await this.$store.dispatch("auth/loginSuccess", data);
       } catch (error) {
         this._activeRegisterField();
-        this.$store.dispatch('app/showMessage', {
+        this.$store.dispatch("app/showMessage", {
           message: error.message,
-          color: this.DEFINES.ERROR_COLOR,
+          color: this.DEFINES.ERROR_COLOR
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
