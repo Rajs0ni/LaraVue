@@ -61,6 +61,14 @@ export default [
           layout: DEFINES.LAYOUT_APP,
         },
       },
+      {
+        path: 'task',
+        name: 'member.task.save',
+        component: lazyLoadPage ('member/task', 'Save'),
+        meta: {
+          layout: DEFINES.LAYOUT_APP,
+        },
+      },
     ],
   },
 ];
