@@ -4,41 +4,41 @@ import paths from './paths';
 import store from '@/store';
 import DEFINES from '@/defines';
 
-Vue.use (VueRouter);
+Vue.use(VueRouter);
 
-const router = new VueRouter ({
+const router = new VueRouter({
   mode: 'history',
   base: '/',
   linkActiveClass: 'active',
   routes: paths,
 });
 
-router.beforeEach (async (to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   //  Layout to be used
   let currentLayout = store.getters['app/appLayout'];
   let expectedLayout = to.meta.layout || DEFINES.LAYOUT_AUTH;
   if (currentLayout != expectedLayout) {
-    store.dispatch (
+    store.dispatch(
       'app/setAppLayout',
       {layout: expectedLayout},
-      DEFINES.USE_ROOT
+      DEFINES.USE_ROOT,
     );
   }
 
-  if (store.getters['app/isLoggedIn'] && to.path.startsWith ('/guest')) {
-    return next ({name: 'member.tasks'});
+  if (store.getters['app/isLoggedIn'] && to.path.startsWith('/guest')) {
+    store.dispatch('app/redirectToMemberPath', null, DEFINES.USE_ROOT);
   }
 
   //Check for authentication
   if (!store.getters['app/isLoggedIn'] && !to.meta.public) {
-    return next ({
+    return next({
       name: 'guest.login',
       query: {
         redirect: to.fullPath,
       },
     });
   }
-  next ();
+  next();
 });
 
 export default router;

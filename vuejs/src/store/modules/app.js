@@ -1,5 +1,6 @@
 import DEFINES from '@/defines';
 import {EventBus} from '@/event-bus.js';
+import router from '@/router';
 
 const initialState = () => ({
   app: {
@@ -31,6 +32,18 @@ const actions = {
   },
   showMessage(context, payload) {
     EventBus.$emit('showMessage', payload);
+  },
+  redirectToMemberPath(context) {
+    // Redirect in case of accessing direct URL
+    if (router.currentRoute.query.redirect) {
+      return router.push(router.currentRoute.query.redirect);
+    }
+    let all_tasks = context.rootGetters['task/list'];
+    if (all_tasks.length) {
+      router.push({name: 'member.tasks'});
+    } else {
+      router.push({name: 'member.task.save'});
+    }
   },
 };
 
