@@ -1,12 +1,17 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
+    <v-app-bar color="customPrimary" dense dark app>
+      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+      <v-toolbar-title>Taskist</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
+    </v-app-bar>
+
     <v-content class="content-background">
-      <v-container fluid fill-height>
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md4>
-            <router-view></router-view>
-          </v-flex>
-        </v-layout>
+      <v-container fluid>
+        <router-view></router-view>
       </v-container>
     </v-content>
   </v-app>
