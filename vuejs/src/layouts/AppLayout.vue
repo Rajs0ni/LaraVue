@@ -5,12 +5,12 @@
       <v-toolbar-title>Taskist</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon>
-        <v-icon>mdi-logout</v-icon>
+        <v-icon>$vuetify.icons.ap_logout</v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-content class="content-background">
-      <v-container fluid>
+      <v-container fill-height fluid>
         <router-view></router-view>
       </v-container>
     </v-content>
