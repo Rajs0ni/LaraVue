@@ -1,3 +1,4 @@
 import {auth} from './auth';
+import {task} from './task';
 
-export {auth};
+export {auth, task};

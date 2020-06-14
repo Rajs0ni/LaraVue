@@ -1,11 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      hide-overlay
-      transition="dialog-bottom-transition"
-    >
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <template v-slot:activator="{on, attrs}">
         <v-btn color="primary" dark v-bind="attrs" v-on="on">Open Dialog</v-btn>
       </template>
@@ -14,21 +9,12 @@
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn class="mx-0" dark text @click="dialog = false">Cancel</v-btn>
-            <v-btn class="mx-0" dark text @click="dialog = false">Save</v-btn>
+            <v-btn class="mx-0" dark text @click="save">Save</v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <form class="px-4">
-          <v-text-field
-            v-model="task.title"
-            placeholder="Title"
-            required
-          ></v-text-field>
-          <v-textarea
-            v-model="task.notes"
-            placeholder="Notes"
-            rows="3"
-            no-resize
-          ></v-textarea>
+          <v-text-field v-model="task.title" placeholder="Title" required></v-text-field>
+          <v-textarea v-model="task.notes" placeholder="Notes" rows="3" no-resize></v-textarea>
           <DateTime
             v-model="task.completion_date"
             :textFieldProps="textFieldProps"
@@ -43,9 +29,9 @@
 </template>
 
 <script>
-import DateTime from '@/components/DateTime';
+import DateTime from "@/components/DateTime";
 export default {
-  name: 'TaskSave',
+  name: "TaskSave",
   data() {
     return {
       dialog: false,
@@ -54,28 +40,40 @@ export default {
       task: {
         title: null,
         notes: null,
-        completion_date: null,
+        completion_date: null
       },
       textFieldProps: {
-        placeholder: 'Select datetime',
+        placeholder: "Select datetime"
       },
       datePickerProps: {
-        color: 'customPrimary',
+        color: "customPrimary",
         flat: true,
-        min: new Date().toISOString().slice(0, 10),
+        min: new Date().toISOString().slice(0, 10)
       },
       timePickerProps: {
-        color: 'customPrimary',
-        flat: true,
+        color: "customPrimary",
+        flat: true
       },
       okButtonProps: {
-        color: 'customPrimary',
-      },
+        color: "customPrimary"
+      }
     };
   },
   components: {
-    DateTime,
+    DateTime
   },
+  methods: {
+    async save() {
+      try {
+        await this.$store.dispatch("task/save", this.task);
+      } catch (error) {
+        this.$store.dispatch("app/showMessage", {
+          message: error.message,
+          color: this.DEFINES.ERROR_COLOR
+        });
+      }
+    }
+  }
 };
 </script>
 
